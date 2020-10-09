@@ -1,5 +1,5 @@
 const locale = {
-  APPLICATIONS: "Aplicaciones",
+  APPLICATIONS: "Modulos",
   DASHBOARDS: "Panel De Control",
   CALENDAR: "Calendar",
   ECOMMERCE: "E-Commerce",
@@ -11,6 +11,10 @@ const locale = {
   CHAT: "Chat",
   SCRUMBOARD: "Scrumboard",
   NOTES: "Notes",
+  /* ------------------- Dislicores -------------------  */
+  USERS: "Usuarios",
+  CITIES: "Ciudades",
+  REGIONAL: "Regionales",
 };
 
 export default locale;

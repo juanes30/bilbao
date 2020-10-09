@@ -12,7 +12,6 @@ import Formsy from "formsy-react";
 import clsx from "clsx";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 
 import { submitLoginWithFireBase } from "app/auth/store/loginSlice";
 

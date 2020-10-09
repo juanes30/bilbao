@@ -1,0 +1,16 @@
+const locale = {
+  APPLICATIONS: "Aplicaciones",
+  DASHBOARDS: "Panel De Control",
+  CALENDAR: "Calendar",
+  ECOMMERCE: "E-Commerce",
+  ACADEMY: "Academy",
+  MAIL: "Mail",
+  TODO: "To-Do",
+  FILE_MANAGER: "File Manager",
+  CONTACTS: "Contacts",
+  CHAT: "Chat",
+  SCRUMBOARD: "Scrumboard",
+  NOTES: "Notes",
+};
+
+export default locale;

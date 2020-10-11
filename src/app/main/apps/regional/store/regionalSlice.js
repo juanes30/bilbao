@@ -10,7 +10,7 @@ import { REGIONAL } from "app/services/firebaseService/collections";
 export const getRegional = createAsyncThunk(
   "regionalApp/regional/get",
   async (routeParams, { getState }) => {
-    routeParams = routeParams || getState().usersApp.users.routeParams;
+    routeParams = routeParams || getState().regionalApp.regional.routeParams;
     const querySnapshot = await firebaseService.dbfirestore
       .collection(REGIONAL)
       .get();

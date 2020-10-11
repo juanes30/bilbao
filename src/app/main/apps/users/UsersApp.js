@@ -52,7 +52,7 @@ function UsersApp(props) {
       />
       <FuseAnimate animation="transition.expandIn" delay={300}>
         <Fab
-          color="primary"
+          color="secondary"
           aria-label="add"
           className={classes.addButton}
           onClick={(ev) => dispatch(openNewUserDialog())}

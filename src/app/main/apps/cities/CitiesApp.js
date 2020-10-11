@@ -13,6 +13,7 @@ import CitiesHeader from "./CitiesHeader";
 import CitiesList from "./CitiesList";
 import reducer from "./store";
 import { getCities, openNewCityDialog } from "./store/citiesSlice";
+import { getDepartments } from "./store/departmentSlice";
 
 const useStyles = makeStyles({
   addButton: {
@@ -32,6 +33,7 @@ function CitiesApp(props) {
 
   useDeepCompareEffect(() => {
     dispatch(getCities(routeParams));
+    dispatch(getDepartments(routeParams));
   }, [dispatch, routeParams]);
 
   return (

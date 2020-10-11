@@ -6,7 +6,6 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import CitiesMultiSelectMenu from "./CitiesMultiSelectMenu";
 import CitiesTable from "./CitiesTable";
 import {
   openEditCityDialog,
@@ -17,66 +16,29 @@ import {
 function CitiesList(props) {
   const dispatch = useDispatch();
   const cities = useSelector(selectCities);
-  const searchText = useSelector(({ citiesApp }) => citiesApp.cities.searchText);
+  const searchText = useSelector(
+    ({ citiesApp }) => citiesApp.cities.searchText
+  );
 
   const [filteredData, setFilteredData] = useState(null);
 
   const columns = React.useMemo(
     () => [
       {
-        Header: ({ selectedFlatRows }) => {
-          const selectedRowIds = selectedFlatRows.map((row) => row.original.id);
-
-          return (
-            selectedFlatRows.length > 0 && (
-              <CitiesMultiSelectMenu selectedCityIds={selectedRowIds} />
-            )
-          );
-        },
-        accessor: "avatar",
-        Cell: ({ row }) => {
-          return (
-            <Avatar
-              className="mx-8"
-              alt={row.original.name}
-              src={row.original.avatar}
-            />
-          );
-        },
-        className: "justify-center",
-        width: 64,
-        sortable: false,
+        Header: "Código",
+        accessor: "code",
+        className: "font-bold",
+        sortable: true,
       },
       {
-        Header: "First Name",
+        Header: "Nombre Ciudad",
         accessor: "name",
         className: "font-bold",
         sortable: true,
       },
       {
-        Header: "Last Name",
-        accessor: "lastName",
-        className: "font-bold",
-        sortable: true,
-      },
-      {
-        Header: "Company",
-        accessor: "company",
-        sortable: true,
-      },
-      {
-        Header: "Job Title",
-        accessor: "jobTitle",
-        sortable: true,
-      },
-      {
-        Header: "Email",
-        accessor: "email",
-        sortable: true,
-      },
-      {
-        Header: "Phone",
-        accessor: "phone",
+        Header: "Departamento",
+        accessor: "department",
         sortable: true,
       },
       {

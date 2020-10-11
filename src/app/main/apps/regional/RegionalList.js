@@ -17,66 +17,24 @@ import {
 function RegionalList(props) {
   const dispatch = useDispatch();
   const regional = useSelector(selectRegional);
-  const searchText = useSelector(({ regionalApp }) => regionalApp.regional.searchText);
+  const searchText = useSelector(
+    ({ regionalApp }) => regionalApp.regional.searchText
+  );
 
   const [filteredData, setFilteredData] = useState(null);
 
   const columns = React.useMemo(
     () => [
       {
-        Header: ({ selectedFlatRows }) => {
-          const selectedRowIds = selectedFlatRows.map((row) => row.original.id);
-
-          return (
-            selectedFlatRows.length > 0 && (
-              <RegionalMultiSelectMenu selectedRegionalIds={selectedRowIds} />
-            )
-          );
-        },
-        accessor: "avatar",
-        Cell: ({ row }) => {
-          return (
-            <Avatar
-              className="mx-8"
-              alt={row.original.name}
-              src={row.original.avatar}
-            />
-          );
-        },
-        className: "justify-center",
-        width: 64,
-        sortable: false,
-      },
-      {
-        Header: "First Name",
+        Header: "Nombre Regional",
         accessor: "name",
         className: "font-bold",
         sortable: true,
       },
       {
-        Header: "Last Name",
-        accessor: "lastName",
+        Header: "Descripción",
+        accessor: "description",
         className: "font-bold",
-        sortable: true,
-      },
-      {
-        Header: "Company",
-        accessor: "company",
-        sortable: true,
-      },
-      {
-        Header: "Job Title",
-        accessor: "jobTitle",
-        sortable: true,
-      },
-      {
-        Header: "Email",
-        accessor: "email",
-        sortable: true,
-      },
-      {
-        Header: "Phone",
-        accessor: "phone",
         sortable: true,
       },
       {

@@ -1,17 +1,18 @@
+import _ from "@lodash";
 import { useForm } from "@fuse/hooks";
 import FuseUtils from "@fuse/utils/FuseUtils";
 import AppBar from "@material-ui/core/AppBar";
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import Icon from "@material-ui/core/Icon";
 import IconButton from "@material-ui/core/IconButton";
-import TextField from "@material-ui/core/TextField";
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   removeCity,
@@ -23,23 +24,19 @@ import {
 const defaultFormState = {
   id: "",
   name: "",
-  lastName: "",
-  avatar: "assets/images/avatars/profile.jpg",
-  nickname: "",
-  company: "",
-  jobTitle: "",
-  email: "",
-  phone: "",
-  address: "",
-  birthday: "",
-  notes: "",
+  code: "",
+  department: "",
 };
 
 function CityDialog(props) {
   const dispatch = useDispatch();
-  const cityDialog = useSelector(({ citiesApp }) => citiesApp.cities.cityDialog);
+  const cityDialog = useSelector(
+    ({ citiesApp }) => citiesApp.cities.cityDialog
+  );
+  const departments = useSelector(({ citiesApp }) => citiesApp.departments.data);
 
   const { form, handleChange, setForm } = useForm(defaultFormState);
+  const [departmentValue, setDepartmentValue] = useState(null);
 
   const initDialog = useCallback(() => {
     /**
@@ -47,6 +44,7 @@ function CityDialog(props) {
      */
     if (cityDialog.type === "edit" && cityDialog.data) {
       setForm({ ...cityDialog.data });
+      setDepartmentValue(cityDialog.data.department)
     }
 
     /**
@@ -58,6 +56,7 @@ function CityDialog(props) {
         ...cityDialog.data,
         id: FuseUtils.generateGUID(),
       });
+      setDepartmentValue(null)
     }
   }, [cityDialog.data, cityDialog.type, setForm]);
 
@@ -77,7 +76,7 @@ function CityDialog(props) {
   }
 
   function canBeSubmitted() {
-    return form.name.length > 0;
+    return form.name.length > 0 && form.department.length > 0;
   }
 
   function handleSubmit(event) {
@@ -104,15 +103,10 @@ function CityDialog(props) {
       <AppBar position="static" elevation={1}>
         <Toolbar className="flex w-full">
           <Typography variant="subtitle1" color="inherit">
-            {cityDialog.type === "new" ? "Nuevo Usuario" : "Edit Usuario"}
+            {cityDialog.type === "new" ? "Nueva Ciudad" : "Editar Ciudad"}
           </Typography>
         </Toolbar>
         <div className="flex flex-col items-center justify-center pb-24">
-          <Avatar
-            className="w-96 h-96"
-            alt="contact avatar"
-            src={form.avatar}
-          />
           {cityDialog.type === "edit" && (
             <Typography variant="h6" color="inherit" className="pt-8">
               {form.name}
@@ -133,8 +127,22 @@ function CityDialog(props) {
 
             <TextField
               className="mb-24"
-              label="Name"
+              label="Código"
               autoFocus
+              id="code"
+              name="code"
+              value={form.code}
+              onChange={handleChange}
+              variant="outlined"
+              fullWidth
+            />
+          </div>
+
+          <div className="flex">
+            <div className="min-w-48 pt-20" />
+            <TextField
+              className="mb-24"
+              label="Nombre Ciudad"
               id="name"
               name="name"
               value={form.name}
@@ -147,149 +155,35 @@ function CityDialog(props) {
 
           <div className="flex">
             <div className="min-w-48 pt-20" />
-            <TextField
-              className="mb-24"
-              label="Last name"
-              id="lastName"
-              name="lastName"
-              value={form.lastName}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </div>
-
-          <div className="flex">
-            <div className="min-w-48 pt-20">
-              <Icon color="action">star</Icon>
-            </div>
-            <TextField
-              className="mb-24"
-              label="Nickname"
-              id="nickname"
-              name="nickname"
-              value={form.nickname}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </div>
-
-          <div className="flex">
-            <div className="min-w-48 pt-20">
-              <Icon color="action">phone</Icon>
-            </div>
-            <TextField
-              className="mb-24"
-              label="Phone"
-              id="phone"
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </div>
-
-          <div className="flex">
-            <div className="min-w-48 pt-20">
-              <Icon color="action">email</Icon>
-            </div>
-            <TextField
-              className="mb-24"
-              label="Email"
-              id="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </div>
-
-          <div className="flex">
-            <div className="min-w-48 pt-20">
-              <Icon color="action">domain</Icon>
-            </div>
-            <TextField
-              className="mb-24"
-              label="Company"
-              id="company"
-              name="company"
-              value={form.company}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </div>
-
-          <div className="flex">
-            <div className="min-w-48 pt-20">
-              <Icon color="action">work</Icon>
-            </div>
-            <TextField
-              className="mb-24"
-              label="Job title"
-              id="jobTitle"
-              name="jobTitle"
-              value={form.jobTitle}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </div>
-
-          <div className="flex">
-            <div className="min-w-48 pt-20">
-              <Icon color="action">cake</Icon>
-            </div>
-            <TextField
-              className="mb-24"
-              id="birthday"
-              label="Birthday"
-              type="date"
-              value={form.birthday}
-              onChange={handleChange}
-              InputLabelProps={{
-                shrink: true,
+            <Autocomplete
+              id="department"
+              options={departments}
+              getOptionLabel={(department) => department}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Departamento"
+                  variant="outlined"
+                />
+              )}
+              value={departmentValue}
+              onChange={(event, newInputValue) => {
+                setDepartmentValue(newInputValue);
+                event.persist();
+                if (
+                  (event.type === "click" || event.type === "keydown") &&
+                  newInputValue
+                ) {
+                  setForm((_form) =>
+                    _.setIn({ ..._form }, "department", newInputValue)
+                  );
+                } else {
+                  setForm((_form) => _.setIn({ ..._form }, "department", ""));
+                }
               }}
-              variant="outlined"
               fullWidth
             />
-          </div>
-
-          <div className="flex">
-            <div className="min-w-48 pt-20">
-              <Icon color="action">home</Icon>
-            </div>
-            <TextField
-              className="mb-24"
-              label="Address"
-              id="address"
-              name="address"
-              value={form.address}
-              onChange={handleChange}
-              variant="outlined"
-              fullWidth
-            />
-          </div>
-
-          <div className="flex">
-            <div className="min-w-48 pt-20">
-              <Icon color="action">note</Icon>
-            </div>
-            <TextField
-              className="mb-24"
-              label="Notes"
-              id="notes"
-              name="notes"
-              value={form.notes}
-              onChange={handleChange}
-              variant="outlined"
-              multiline
-              rows={5}
-              fullWidth
-            />
+          
           </div>
         </DialogContent>
 

@@ -41,6 +41,13 @@ const navigationConfig = [
         type: "item",
         url: "/apps/regional",
       },
+      {
+        id: "restaurants",
+        title: "Restaurant",
+        translate: "RESTAURANTS",
+        type: "item",
+        url: "/apps/restaurants",
+      },
     ],
   },
 ];

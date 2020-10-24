@@ -13,6 +13,7 @@ import TodoAppConfig from "./todo/TodoAppConfig";
 import UsersAppConfig from "./users/UsersAppConfig";
 import RegionalAppConfig from "./regional/RegionalAppConfig";
 import CitiesAppConfig from "./cities/CitiesAppConfig";
+import RestaurantsAppConfig from "./restaurants/RestaurantsAppConfig";
 
 const appsConfigs = [
   AnalyticsDashboardAppConfig,
@@ -32,6 +33,7 @@ const appsConfigs = [
   UsersAppConfig,
   RegionalAppConfig,
   CitiesAppConfig,
+  RestaurantsAppConfig,
 ];
 
 export default appsConfigs;

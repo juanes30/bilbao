@@ -38,9 +38,11 @@ function Login() {
 
   useEffect(() => {
     if (login.error && (login.error.email || login.error.password)) {
-      formRef.current.updateInputsWithError({
-        ...login.error,
-      });
+      if(!login.error.password.includes('The password is invalid or the user does not have a password.')){
+        formRef.current.updateInputsWithError({
+          ...login.error,
+        });
+      }
       disableButton();
     }
   }, [login.error]);
@@ -115,7 +117,6 @@ function Login() {
                     className="mb-16"
                     type="text"
                     name="email"
-                    value="juanestebanlt@gmail.com"
                     label="Correo"
                     validations={{
                       minLength: 4,
@@ -142,7 +143,6 @@ function Login() {
                     className="mb-16"
                     type="password"
                     name="password"
-                    value="Abcd1234*"
                     label="Contraseña"
                     validations={{
                       minLength: 7,

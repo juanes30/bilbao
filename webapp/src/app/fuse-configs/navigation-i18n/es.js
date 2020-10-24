@@ -15,6 +15,7 @@ const locale = {
   USERS: "Usuarios",
   CITIES: "Ciudades",
   REGIONAL: "Regionales",
+  RESTAURANTS: "Restaurantes",
 };
 
 export default locale;

@@ -87,7 +87,7 @@ function Login() {
             color="inherit"
             className="max-w-512 mt-16"
           >
-            Plataforma de gestion de restaurantes Share of Menu
+            Plataforma de gestión de restaurantes
           </Typography>
         </FuseAnimate>
       </div>

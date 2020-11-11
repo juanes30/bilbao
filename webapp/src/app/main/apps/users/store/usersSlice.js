@@ -15,6 +15,7 @@ export const getUsers = createAsyncThunk(
     routeParams = routeParams || getState().usersApp.users.routeParams;
     const querySnapshot = await firebaseService.dbfirestore
       .collection(USERS)
+      .orderBy("name", "asc")
       .get();
     let users = [];
     querySnapshot.forEach((documentSnapshot) =>

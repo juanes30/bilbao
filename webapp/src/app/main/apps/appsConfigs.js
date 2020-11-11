@@ -14,6 +14,7 @@ import UsersAppConfig from "./users/UsersAppConfig";
 import RegionalAppConfig from "./regional/RegionalAppConfig";
 import CitiesAppConfig from "./cities/CitiesAppConfig";
 import RestaurantsAppConfig from "./restaurants/RestaurantsAppConfig";
+import BarStaffAppConfig from "./bar-staff/BarStaffAppConfig";
 
 const appsConfigs = [
   AnalyticsDashboardAppConfig,
@@ -34,6 +35,7 @@ const appsConfigs = [
   RegionalAppConfig,
   CitiesAppConfig,
   RestaurantsAppConfig,
+  BarStaffAppConfig,
 ];
 
 export default appsConfigs;

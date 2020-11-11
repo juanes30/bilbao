@@ -10,6 +10,7 @@ import {
   RESTAURANTS,
   CITIES,
   REGIONAL,
+  USERS,
 } from "app/services/firebaseService/collections";
 
 export const getRestaurants = createAsyncThunk(
@@ -32,7 +33,13 @@ export const getRestaurants = createAsyncThunk(
       restaurants.map(async (restaurant) => {
         const cityName = await getCity(restaurant.cityId);
         const regionalName = await getRegional(restaurant.regionalId);
-        return { ...restaurant, city: cityName, regional: regionalName };
+        const userName = await getUser(restaurant.userId);
+        return {
+          ...restaurant,
+          city: cityName,
+          regional: regionalName,
+          user: userName,
+        };
       })
     );
     return { data: restaurants, routeParams };
@@ -53,6 +60,18 @@ const getRegional = async (regionalId) => {
     .doc(regionalId)
     .get();
   return docRegional.data().name;
+};
+
+const getUser = async (userId) => {
+  const querySnapshot = await firebaseService.dbfirestore
+    .collection(USERS)
+    .where("uidAuth", "==", userId)
+    .get();
+  if (querySnapshot.docs.length > 0) {
+    const data = querySnapshot.docs[0].data();
+    return `${data.name} ${data.lastName}`;
+  }
+  return "";
 };
 
 export const removeRestaurant = createAsyncThunk(

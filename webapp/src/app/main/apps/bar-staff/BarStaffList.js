@@ -9,14 +9,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import XLSX from "xlsx";
 
-import RestaurantsTable from "./RestaurantsTable";
-import { removeRestaurant, selectRestaurants } from "./store/restaurantsSlice";
+import BarStaffTable from "./BarStaffTable";
+import { removeBarStaff, selectBarStaff } from "./store/barStaffSlice";
 
-function RestaurantsList(props) {
+function BarStaffList(props) {
   const dispatch = useDispatch();
-  const restaurants = useSelector(selectRestaurants);
+  const barStaff = useSelector(selectBarStaff);
   const searchText = useSelector(
-    ({ restaurantsApp }) => restaurantsApp.restaurants.searchText
+    ({ barStaffApp }) => barStaffApp.barStaff.searchText
   );
 
   const [filteredData, setFilteredData] = useState(null);
@@ -30,46 +30,34 @@ function RestaurantsList(props) {
         sortable: true,
       },
       {
-        Header: "NIT",
-        accessor: "nit",
-        className: "font-bold",
+        Header: "Apellido",
+        accessor: "lastName",
         sortable: true,
       },
       {
-        Header: "Ciudad",
-        accessor: "city",
+        Header: "Correo",
+        accessor: "email",
+        sortable: true,
+      },
+      {
+        Header: "Teléfono",
+        accessor: "cellphone",
+        sortable: true,
+      },
+      {
+        Header: "Establecimiento",
+        accessor: "establishment",
+        sortable: true,
+      },
+      {
+        Header: "Cargo",
+        accessor: "position",
         sortable: true,
       },
       {
         Header: "Regional",
         accessor: "regional",
         sortable: true,
-      },
-      {
-        Header: "Nombre Usuario",
-        accessor: "user",
-        sortable: true,
-      },
-      {
-        Header: "URL Menú",
-        accessor: "url",
-        sortable: true,
-        Cell: ({ row }) => (
-          <div className="flex items-center">
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => {
-                Object.assign(document.createElement("a"), {
-                  target: "_blank",
-                  href: row.original.url,
-                }).click();
-              }}
-            >
-              Ver URL
-            </Button>
-          </div>
-        ),
       },
       {
         id: "action",
@@ -80,7 +68,7 @@ function RestaurantsList(props) {
             <IconButton
               onClick={(ev) => {
                 ev.stopPropagation();
-                dispatch(removeRestaurant(row.original.id));
+                dispatch(removeBarStaff(row.original.id));
               }}
             >
               <Icon>delete</Icon>
@@ -95,15 +83,15 @@ function RestaurantsList(props) {
   useEffect(() => {
     function getFilteredArray(entities, _searchText) {
       if (_searchText.length === 0) {
-        return restaurants;
+        return barStaff;
       }
-      return FuseUtils.filterArrayByString(restaurants, _searchText);
+      return FuseUtils.filterArrayByString(barStaff, _searchText);
     }
 
-    if (restaurants) {
-      setFilteredData(getFilteredArray(restaurants, searchText));
+    if (barStaff) {
+      setFilteredData(getFilteredArray(barStaff, searchText));
     }
-  }, [restaurants, searchText]);
+  }, [barStaff, searchText]);
 
   if (!filteredData) {
     return null;
@@ -112,25 +100,26 @@ function RestaurantsList(props) {
   const exportToExcel = () => {
     const exportData = filteredData.map((data) => {
       return {
-        Nombre: data.name,
-        NIT: data.nit,
-        Ciudad: data.city,
+        Nombres: data.name,
+        Apellidos: data.lastName,
+        Correo: data.email,
+        Teléfono: data.cellphone,
+        Establecimiento: data.establishment,
+        Cargo: data.position,
         Regional: data.regional,
-        NombreUsuario: data.user,
-        Url: data.url,
       };
     });
     const wb = XLSX.utils.book_new();
     const wsAll = XLSX.utils.json_to_sheet(exportData);
-    XLSX.utils.book_append_sheet(wb, wsAll, "Restaurantes");
-    XLSX.writeFile(wb, "Resturantes-Menu.xlsx");
+    XLSX.utils.book_append_sheet(wb, wsAll, "Mesa y Bar");
+    XLSX.writeFile(wb, "Mesa y Bar-Menu.xlsx");
   };
 
   if (filteredData.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center h-full">
         <Typography color="textSecondary" variant="h5">
-          No hay restaurantes creados
+          No hay datos
         </Typography>
       </div>
     );
@@ -139,13 +128,18 @@ function RestaurantsList(props) {
   return (
     <FuseAnimate animation="transition.slideUpIn" delay={300}>
       <>
-        <Button variant="contained" color="primary" onClick={exportToExcel} className="w-1/6 mb-10">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={exportToExcel}
+          className="w-1/6 mb-10"
+        >
           Exportar
         </Button>
-        <RestaurantsTable columns={columns} data={filteredData} />
+        <BarStaffTable columns={columns} data={filteredData} />
       </>
     </FuseAnimate>
   );
 }
 
-export default RestaurantsList;
+export default BarStaffList;

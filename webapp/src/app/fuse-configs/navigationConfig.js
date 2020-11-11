@@ -48,6 +48,13 @@ const navigationConfig = [
         type: "item",
         url: "/apps/restaurants",
       },
+      {
+        id: "barStaff",
+        title: "Bar Staff",
+        translate: "BAR_STAFF",
+        type: "item",
+        url: "/apps/bar-staff",
+      },
     ],
   },
 ];

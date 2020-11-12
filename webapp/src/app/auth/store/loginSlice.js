@@ -95,8 +95,8 @@ export const isNewAccount = ({ email, password }) => async (dispatch) => {
     .where("email", "==", email)
     .get();
 
-  const isNewAccount = querySnapshot.docs.length > 0;
-  if (isNewAccount) {
+  const isNew = querySnapshot.docs.length > 0;
+  if (isNew) {
     const id = querySnapshot.docs[0].id;
     dispatch(isNewAccountSuccess(id));
   } else {

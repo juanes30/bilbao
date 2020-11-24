@@ -14,9 +14,10 @@ export const submitLoginWithFireBase = ({ email, password }) => async (
 
     return () => false;
   }
+  const newPassword = `D1s${password}@*`;
 
   return firebaseService.auth
-    .signInWithEmailAndPassword(email, password)
+    .signInWithEmailAndPassword(email, newPassword)
     .then(() => {
       return dispatch(loginSuccess());
     })
@@ -50,8 +51,9 @@ export const submitLoginWithFireBase = ({ email, password }) => async (
 export const createAccountWithFireBase = ({ email, password, id }) => async (
   dispatch
 ) => {
+  const newPassword = `D1s${password}@*`;
   return firebaseService.auth
-    .createUserWithEmailAndPassword(email, password)
+    .createUserWithEmailAndPassword(email, newPassword)
     .then(() => {
       updateCreateAccountStatus(id)
         .then(() => {

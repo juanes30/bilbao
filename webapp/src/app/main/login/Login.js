@@ -145,10 +145,10 @@ function Login() {
                     name="password"
                     label="Contraseña"
                     validations={{
-                      minLength: 7,
+                      minLength: 4,
                     }}
                     validationErrors={{
-                      minLength: "El tamaño minimo es 7",
+                      minLength: "El tamaño minimo es 4",
                     }}
                     InputProps={{
                       className: "pr-2",

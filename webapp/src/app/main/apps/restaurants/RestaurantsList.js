@@ -60,9 +60,13 @@ function RestaurantsList(props) {
               variant="outlined"
               color="primary"
               onClick={() => {
+                const url =
+                  row.original.url === "N/A"
+                    ? row.original.imageUrl
+                    : row.original.url;
                 Object.assign(document.createElement("a"), {
                   target: "_blank",
-                  href: row.original.url,
+                  href: url,
                 }).click();
               }}
             >
@@ -139,7 +143,12 @@ function RestaurantsList(props) {
   return (
     <FuseAnimate animation="transition.slideUpIn" delay={300}>
       <>
-        <Button variant="contained" color="primary" onClick={exportToExcel} className="w-1/6 mb-10">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={exportToExcel}
+          className="w-1/6 mb-10"
+        >
           Exportar
         </Button>
         <RestaurantsTable columns={columns} data={filteredData} />

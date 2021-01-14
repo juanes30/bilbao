@@ -1,6 +1,5 @@
 import FuseAnimate from "@fuse/core/FuseAnimate";
 import { TextFieldFormsy } from "@fuse/core/formsy";
-import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
@@ -12,10 +11,10 @@ import Formsy from "formsy-react";
 import clsx from "clsx";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { Link } from 'react-router-dom';
 
-import { isNewAccount } from "app/auth/store/loginSlice";
-import CreateAccount from "./CreateAccount";
+import { sendEmailResetPassword } from "app/auth/store/loginSlice";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,14 +25,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Login() {
+function ForgotPassword() {
   const dispatch = useDispatch();
   const classes = useStyles();
+  const history = useHistory();
 
   const login = useSelector(({ auth }) => auth.login);
 
   const [isFormValid, setIsFormValid] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
   const formRef = useRef(null);
 
@@ -61,7 +60,19 @@ function Login() {
   }
 
   function handleSubmit(model) {
-    dispatch(isNewAccount(model));
+    const data = {
+      email: model.email,
+    };
+    dispatch(sendEmailResetPassword(data));
+  }
+
+  if (login.resetPasswordSuccess) {
+    alert("Se envio el correo correctamente!!!");
+    history.push("/login");
+  }
+
+  if (login.resetPasswordError) {
+    alert(login.resetPasswordError);
   }
 
   return (
@@ -98,17 +109,12 @@ function Login() {
       </div>
 
       {React.useMemo(() => {
-        if (login.isNewAccount && formRef.current) {
-          const { email, password } = formRef.current.getModel();
-          return <CreateAccount email={email} password={password} />;
-        }
-
         return (
           <FuseAnimate animation={{ translateX: [0, "100%"] }}>
             <Card className="w-full max-w-400 mx-auto m-16 md:m-0" square>
               <CardContent className="flex flex-col items-center justify-center p-32 md:p-48 md:pt-128 ">
                 <Typography variant="h6" className="md:w-full mb-32">
-                  INGRESA A TU CUENTA
+                  RECUPERAR CONTRASEÑA
                 </Typography>
 
                 <Formsy
@@ -144,52 +150,22 @@ function Login() {
                     required
                   />
 
-                  <TextFieldFormsy
-                    className="mb-16"
-                    type="password"
-                    name="password"
-                    label="Contraseña"
-                    validations={{
-                      minLength: 4,
-                    }}
-                    validationErrors={{
-                      minLength: "El tamaño minimo es 4",
-                    }}
-                    InputProps={{
-                      className: "pr-2",
-                      type: showPassword ? "text" : "password",
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
-                            <Icon className="text-20" color="action">
-                              {showPassword ? "visibility" : "visibility_off"}
-                            </Icon>
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                    variant="outlined"
-                    required
-                  />
-
                   <Button
                     type="submit"
                     variant="contained"
                     color="primary"
                     className="w-full mx-auto mt-16 normal-case"
-                    aria-label="LOG IN"
+                    aria-label="ENVIAR LINK"
                     disabled={!isFormValid}
                     value="legacy"
                   >
-                    INGRESAR
+                    ENVIAR LINK
                   </Button>
                 </Formsy>
 
                 <div className="flex flex-col items-center justify-center pt-32 pb-24">
-                  <Link className="font-medium" to="/auth/forgot-password">
-                    Recupera Contraseña
+                  <Link className="font-medium" to="/login">
+                    Regresar
                   </Link>
                 </div>
               </CardContent>
@@ -201,4 +177,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default ForgotPassword;

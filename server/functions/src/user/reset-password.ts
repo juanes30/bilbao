@@ -1,23 +1,23 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import nodemailer from "nodemailer";
+import * as nodemailer from "nodemailer";
 
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "",
-    pass: "",
+    user: "app@dislicores.com",
+    pass: "Dislicores123",
   },
 });
 
 const sendEmail = async (email: string, link: string) => {
   const mailOptions = {
-    from: "QR Menu <yourgmailaccount@gmail.com>", // Something like: Jane Doe <janedoe@gmail.com>
+    from: "QR Menu <app@dislicores.com>", // Something like: Jane Doe <janedoe@gmail.com>
     to: email,
     subject: "Restablece tu contraseña de QR Menu", // email subject
     html: `
     <p>Hola:</p>
-    <p>Visita este vínculo para restablecer la contraseña de  QR Menu para tu cuenta de %EMAIL%.</p>
+    <p>Visita este vínculo para restablecer la contraseña de  QR Menu para tu cuenta de ${email}.</p>
     <p><a href='${link}'>CLICK PARA RESTABLECER</a></p>
     <p>Si no solicitaste el restablecimiento de tu contraseña, puedes ignorar este correo electrónico.</p>
     <p>Gracias.</p>
@@ -58,7 +58,8 @@ export const resetPasswordEmail = functions.https.onRequest(
         return res.status(200).json({ message: "Se envio el correo" });
       } catch (error) {
         const response = {
-          message: "Error al eliminar el usuario",
+          message: "Error al enviar el correo",
+          error
         };
 
         return res.status(500).json(response);

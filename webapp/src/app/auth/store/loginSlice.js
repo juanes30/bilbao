@@ -107,6 +107,32 @@ export const isNewAccount = ({ email, password }) => async (dispatch) => {
   }
 };
 
+export const resetPassword = ({ password, oobCode, apiKey, mode }) => async (
+  dispatch
+) => {
+  try {
+    if (mode === "resetPassword") {
+      const newPassword = `D1s${password}@*`;
+      await firebaseService.auth.verifyPasswordResetCode(oobCode);
+      await firebaseService.auth.confirmPasswordReset(oobCode, newPassword);
+      dispatch(resetPasswordSuccess());
+    } else {
+      dispatch(resetPasswordError("Modo no valido"));
+    }
+  } catch (error) {
+    dispatch(resetPasswordError("No se pudo restablecer la contraseña"));
+  }
+};
+
+export const sendEmailResetPassword = ({ email }) => async (dispatch) => {
+  try {
+    await firebaseService.auth.sendPasswordResetEmail(email);
+    dispatch(resetPasswordSuccess());
+  } catch (error) {
+    dispatch(resetPasswordError("No se pudo restablecer la contraseña"));
+  }
+};
+
 const updateCreateAccountStatus = async (id) => {
   await firebaseService.dbfirestore
     .collection(USERS)
@@ -122,6 +148,8 @@ const initialState = {
     username: null,
     password: null,
   },
+  resetPasswordSuccess: false,
+  resetPasswordError: "",
 };
 
 const loginSlice = createSlice({
@@ -146,6 +174,14 @@ const loginSlice = createSlice({
       state.success = false;
       state.isNewAccount = false;
     },
+    resetPasswordSuccess: (state, action) => {
+      state.resetPasswordSuccess = true;
+      state.resetPasswordError = "";
+    },
+    resetPasswordError: (state, action) => {
+      state.resetPasswordSuccess = false;
+      state.resetPasswordError = action.payload;
+    },
   },
   extraReducers: {},
 });
@@ -155,6 +191,8 @@ export const {
   loginError,
   isNewAccountSuccess,
   isNewAccountError,
+  resetPasswordSuccess,
+  resetPasswordError,
 } = loginSlice.actions;
 
 export default loginSlice.reducer;

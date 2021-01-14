@@ -12,10 +12,9 @@ import Formsy from "formsy-react";
 import clsx from "clsx";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from 'react-router-dom';
+import { useLocation, useHistory } from "react-router-dom";
 
-import { isNewAccount } from "app/auth/store/loginSlice";
-import CreateAccount from "./CreateAccount";
+import { resetPassword } from "app/auth/store/loginSlice";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,9 +25,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Login() {
+function ResetPassword() {
   const dispatch = useDispatch();
   const classes = useStyles();
+  const { search } = useLocation();
+  const history = useHistory();
 
   const login = useSelector(({ auth }) => auth.login);
 
@@ -36,6 +37,11 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   const formRef = useRef(null);
+
+  const query = new URLSearchParams(search);
+  const oobCode = query.get("oobCode");
+  const apiKey = query.get("apiKey");
+  const mode = query.get("mode");
 
   useEffect(() => {
     if (login.error && (login.error.email || login.error.password)) {
@@ -61,7 +67,22 @@ function Login() {
   }
 
   function handleSubmit(model) {
-    dispatch(isNewAccount(model));
+    const data = {
+      password: model.password,
+      oobCode,
+      apiKey,
+      mode,
+    };
+    dispatch(resetPassword(data));
+  }
+
+  if (login.resetPasswordSuccess) {
+    alert("Se restablecio la clave correctamente");
+    history.push("/login");
+  }
+
+  if (login.resetPasswordError) {
+    alert(login.resetPasswordError);
   }
 
   return (
@@ -98,17 +119,12 @@ function Login() {
       </div>
 
       {React.useMemo(() => {
-        if (login.isNewAccount && formRef.current) {
-          const { email, password } = formRef.current.getModel();
-          return <CreateAccount email={email} password={password} />;
-        }
-
         return (
           <FuseAnimate animation={{ translateX: [0, "100%"] }}>
             <Card className="w-full max-w-400 mx-auto m-16 md:m-0" square>
               <CardContent className="flex flex-col items-center justify-center p-32 md:p-48 md:pt-128 ">
                 <Typography variant="h6" className="md:w-full mb-32">
-                  INGRESA A TU CUENTA
+                  RESTABLECER CONTRASEÑA
                 </Typography>
 
                 <Formsy
@@ -120,35 +136,9 @@ function Login() {
                 >
                   <TextFieldFormsy
                     className="mb-16"
-                    type="text"
-                    name="email"
-                    label="Correo"
-                    validations={{
-                      minLength: 4,
-                      isEmail: true,
-                    }}
-                    validationErrors={{
-                      minLength: "El tamaño minimo es 4",
-                      isEmail: "El formato del correo es incorrecto",
-                    }}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Icon className="text-20" color="action">
-                            email
-                          </Icon>
-                        </InputAdornment>
-                      ),
-                    }}
-                    variant="outlined"
-                    required
-                  />
-
-                  <TextFieldFormsy
-                    className="mb-16"
                     type="password"
                     name="password"
-                    label="Contraseña"
+                    label="Nueva Contraseña"
                     validations={{
                       minLength: 4,
                     }}
@@ -183,15 +173,9 @@ function Login() {
                     disabled={!isFormValid}
                     value="legacy"
                   >
-                    INGRESAR
+                    GUARDAR
                   </Button>
                 </Formsy>
-
-                <div className="flex flex-col items-center justify-center pt-32 pb-24">
-                  <Link className="font-medium" to="/auth/forgot-password">
-                    Recupera Contraseña
-                  </Link>
-                </div>
               </CardContent>
             </Card>
           </FuseAnimate>
@@ -201,4 +185,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default ResetPassword;

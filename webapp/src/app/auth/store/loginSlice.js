@@ -91,10 +91,11 @@ export const createAccountWithFireBase = ({ email, password, id }) => async (
 };
 
 export const isNewAccount = ({ email, password }) => async (dispatch) => {
+  const emailCopy = email.toLowerCase().replace(" ", "");
   const querySnapshot = await firebaseService.dbfirestore
     .collection(USERS)
     .where("createAccount", "==", true)
-    .where("email", "==", email)
+    .where("email", "==", emailCopy)
     .get();
 
   const isNew = querySnapshot.docs.length > 0;
@@ -103,7 +104,7 @@ export const isNewAccount = ({ email, password }) => async (dispatch) => {
     dispatch(isNewAccountSuccess(id));
   } else {
     dispatch(isNewAccountError());
-    dispatch(submitLoginWithFireBase({ email, password }));
+    dispatch(submitLoginWithFireBase({ email: emailCopy, password }));
   }
 };
 

@@ -122,7 +122,7 @@ function FuseAuthorizationDoc() {
 						role: [],//guest
 						data: {
 							'displayName': 'John Doe',
-							'photoURL'   : 'assets/images/avatars/Velazquez.jpg',
+							'photoURL'   : 'assets/images/avatars/profile.png',
 							'email'      : 'johndoe@withinpixels.com',
 							shortcuts    : [
 								'calendar',

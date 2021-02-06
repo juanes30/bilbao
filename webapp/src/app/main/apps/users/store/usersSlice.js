@@ -5,6 +5,8 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 
+import { showMessage } from "app/store/fuse/messageSlice";
+
 import firebaseService from "app/services/firebaseService/firebaseService";
 
 import { USERS } from "app/services/firebaseService/collections";
@@ -30,10 +32,14 @@ export const saveUser = createAsyncThunk(
   async (user, { dispatch, getState }) => {
     const id = user.id;
     delete user.id;
+    const userCopy = {
+      ...user,
+      email: user.email.toLowerCase().replace(" ", ""),
+    };
     if (id) {
-      await updateUser(user, id);
+      await updateUser(userCopy, id);
     } else {
-      await createUser(user);
+      await createUser(userCopy, dispatch);
     }
     dispatch(getUsers());
   }
@@ -47,14 +53,21 @@ export const removeUser = createAsyncThunk(
       .doc(userId)
       .get();
     const uidAuth = documentSnapshot.data().uidAuth;
-    const response = await axios.post(
-      "https://us-central1-dislicores-share-of-menu.cloudfunctions.net/deleteAccountUser",
-      { uid: uidAuth }
-    );
+    if (uidAuth) {
+      const response = await axios.post(
+        "https://us-central1-dislicores-share-of-menu.cloudfunctions.net/deleteAccountUser",
+        { uid: uidAuth }
+      );
 
-    if (response.status === 200) {
-      await firebaseService.dbfirestore.collection(USERS).doc(userId).delete();
+      if (response.status === 200) {
+        await firebaseService.dbfirestore
+          .collection(USERS)
+          .doc(userId)
+          .delete();
+      }
     }
+
+    await firebaseService.dbfirestore.collection(USERS).doc(userId).delete();
 
     dispatch(getUsers());
   }
@@ -71,10 +84,27 @@ export const removeMultiple = createAsyncThunk(
   }
 );
 
-const createUser = async (user) => {
-  await firebaseService.dbfirestore
+const createUser = async (user, dispatch) => {
+  const querySnap = await firebaseService.dbfirestore
     .collection(USERS)
-    .add({ ...user, createAccount: true });
+    .where("email", "==", user.email)
+    .get();
+  if (querySnap.docs.length > 0) {
+    dispatch(
+      showMessage({
+        message: "Info: El correo ya fue registrado",
+        autoHideDuration: 10000,
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+      })
+    );
+  } else {
+    await firebaseService.dbfirestore
+      .collection(USERS)
+      .add({ ...user, createAccount: true });
+  }
 };
 
 const updateUser = async (user, userId) => {

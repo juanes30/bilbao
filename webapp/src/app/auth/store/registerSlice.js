@@ -12,15 +12,16 @@ export const registerWithFirebase = (model) => async (dispatch) => {
     return () => false;
   }
   const { email, password, displayName } = model;
+  const emailCopy = email.toLowerCase().replace(" ", "");
 
   return firebaseService.auth
-    .createUserWithEmailAndPassword(email, password)
+    .createUserWithEmailAndPassword(emailCopy, password)
     .then((response) => {
       dispatch(
         createUserSettingsFirebase({
           ...response.user,
           displayName,
-          email,
+          emailCopy,
         })
       );
 

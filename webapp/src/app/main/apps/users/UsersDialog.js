@@ -160,6 +160,7 @@ function UserDialog(props) {
               onChange={handleChange}
               variant="outlined"
               fullWidth
+              disabled={form.id}
             />
           </div>
 

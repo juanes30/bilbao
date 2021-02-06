@@ -207,7 +207,7 @@ function TimelineTab() {
 								)}
 
 								<div className="flex flex-auto -mx-4">
-									<Avatar className="mx-4" src="assets/images/avatars/profile.jpg" />
+									<Avatar className="mx-4" src="assets/images/avatars/profile.png" />
 									<div className="flex-1 mx-4">
 										<Paper elevation={0} className="w-full mb-16">
 											<Input
